@@ -11,9 +11,8 @@ class GPU:
 
         # Start the display
         pygame.init()
-        self.screen = pygame.display.set_mode([160,144])
+        self.screen = pygame.display.set_mode([160,144], pygame.DOUBLEBUF)
         self.background = pygame.Surface((256,256))
-        self.background.fill((175,200,70))
         self.white = (175, 200, 70 , 255)
         self.light_grey = (130, 170, 100, 255)
         self.dark_grey = (35, 110, 95, 255)
@@ -55,16 +54,16 @@ class GPU:
         # Read each byte at BG Map Data 1
         for index in range(0, 0x400):
 
-            tile_choice = self.memory.read(0x9800 + index)
-
             # Tile data is 16 bytes long
-            tile_data_index = self.memory.read(0x8000 + tile_choice * 16)
+            tile_data_index = 0x8000 + self.memory.read(0x9800 + index) * 16
 
             # Get each portion of the tile data in increments of 2 bytes (a row at a time)
             rows = [[],[],[],[],[],[],[],[]]
+            n = 0
             for i in range(0,16,2):
-                byte1 = self.memory.read(0x8000 + tile_data_index + i)
-                byte2 = self.memory.read(0x8000 + tile_data_index + i + 1)
+
+                byte2 = self.memory.read(tile_data_index + i)
+                byte1 = self.memory.read(tile_data_index + i + 1)
 
                 # Determine the color of each pixel (2 bits), example:
                 # byte1 = 0b10001111
@@ -73,15 +72,13 @@ class GPU:
                 colors = [(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0)]
                 for b in range(0,8):
 
-                    c1 = byte1 & (0x80 >> b)
-                    c2 = byte2 & (0x80 >> b)
-
-                    if c1: c1 = 1
+                    if byte1 & (0x80 >> b): c1 = 1
                     else: c1 = 0
-                    if c2: c2 = 1
+
+                    if byte2 & (0x80 >> b): c2 = 1
                     else: c2 = 0
 
-                    s = (c2 << 1) | c1
+                    s = (c2 << 1) + c1
                     if s == 0:
                         color = self.white
                     elif s == 1:
@@ -94,7 +91,8 @@ class GPU:
                         color = (255,0,0) # bad tiles are red
                     colors[b] = color
 
-                rows[int(i/2)] = colors
+                rows[n] = colors
+                n += 1
 
             # Copy each row from the tile into the background array
             for y in range(0,8):
@@ -104,8 +102,10 @@ class GPU:
                     self.background_pixels[xindex, yindex] = rows[y][x]
 
         del self.background_pixels
-        gpu_thread = Thread(target=self.render)
-        gpu_thread.start()
+        self.screen.blit(self.background,(0, -1*self.memory.read(0xFF42)))
+        pygame.display.flip()
+        #gpu_thread = Thread(target=self.render)
+        #gpu_thread.start()
 
 
 

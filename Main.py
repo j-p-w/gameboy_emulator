@@ -21,13 +21,9 @@ time_display = time.clock()
 
 while RUNNING:
 
-
-    if CPU.PC > 0xFF:
-        STEP = True
-        print("REACHED THE ACTUAL GAME...")
     cycles_before = CPU.cycles
     CPU.fetch()
-    if STEP:
+    if CPU.PC >= 0x100:
         print("0x" + hex(CPU.PC)[2:].zfill(4).upper() + " : ", end="")
         CPU.decode()
         print(CPU.debug_string + "	",end="")
@@ -35,7 +31,7 @@ while RUNNING:
             print(hex(CPU.args[i])[2:].zfill(2).upper() + " ", end="")
         print("")
         CPU.print_registers()
-        input()
+        #input()
     else:
         CPU.decode()
 

@@ -523,8 +523,6 @@ class CPU:
 		# Get the arguments of the instruction and increment PC
 		for i in range(0, self.instruction_length-1):
 			self.args[i] = self.memory.read(self.PC + 1 + i)
-			if self.DEBUG:
-				print(hex(self.args[i])[2:].zfill(2).upper() + " ", end="")
 
 		# Increment the PC accordingly
 		self.PC += self.instruction_length
@@ -2724,7 +2722,7 @@ class CPU:
 	# Z 0 0 0
 	def XOR_B(self):
 
-		self.A = self.A ^ self.B
+		self.A = (self.A ^ self.B) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:
@@ -2745,7 +2743,7 @@ class CPU:
 	# Z 0 0 0
 	def XOR_C(self):
 
-		self.A = self.A ^ self.C
+		self.A = (self.A ^ self.C) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:
@@ -2766,7 +2764,7 @@ class CPU:
 	# Z 0 0 0
 	def XOR_D(self):
 
-		self.A = self.A ^ self.D
+		self.A = (self.A ^ self.D) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:
@@ -2787,7 +2785,7 @@ class CPU:
 	# Z 0 0 0
 	def XOR_E(self):
 
-		self.A = self.A ^ self.E
+		self.A = (self.A ^ self.E) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:
@@ -2808,7 +2806,7 @@ class CPU:
 	# Z 0 0 0
 	def XOR_H(self):
 
-		self.A = self.A ^ self.H
+		self.A = (self.A ^ self.H) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:
@@ -2829,7 +2827,7 @@ class CPU:
 	# Z 0 0 0
 	def XOR_L(self):
 
-		self.A = self.A ^ self.L
+		self.A = (self.A ^ self.L) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:
@@ -2851,7 +2849,7 @@ class CPU:
 	def XOR_M_HL(self):
 
 		val = self.memory.read(self.get_HL())
-		self.A = self.A ^ val
+		self.A = (self.A ^ val) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:
@@ -2872,7 +2870,7 @@ class CPU:
 	# Z 0 0 0
 	def XOR_A(self):
 
-		self.A = self.A ^ self.A
+		self.A = (self.A ^ self.A) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:
@@ -2893,7 +2891,7 @@ class CPU:
 	# Z 0 0 0
 	def OR_B(self):
 
-		self.A = self.A | self.B
+		self.A = (self.A | self.B) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:
@@ -2914,7 +2912,7 @@ class CPU:
 	# Z 0 0 0
 	def OR_C(self):
 
-		self.A = self.A | self.C
+		self.A = (self.A | self.C) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:
@@ -2935,7 +2933,7 @@ class CPU:
 	# Z 0 0 0
 	def OR_D(self):
 
-		self.A = self.A | self.D
+		self.A = (self.A | self.D) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:
@@ -2956,7 +2954,7 @@ class CPU:
 	# Z 0 0 0
 	def OR_E(self):
 
-		self.A = self.A | self.E
+		self.A = (self.A | self.E) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:
@@ -2977,7 +2975,7 @@ class CPU:
 	# Z 0 0 0
 	def OR_H(self):
 
-		self.A = self.A | self.H
+		self.A = (self.A | self.H) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:
@@ -2998,7 +2996,7 @@ class CPU:
 	# Z 0 0 0
 	def OR_L(self):
 
-		self.A = self.A | self.L
+		self.A = (self.A | self.L) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:
@@ -3020,7 +3018,7 @@ class CPU:
 	def OR_M_HL(self):
 
 		val = self.memory.read(self.get_HL())
-		self.A = self.A | val
+		self.A = (self.A | val) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:
@@ -3041,7 +3039,7 @@ class CPU:
 	# Z 0 0 0
 	def OR_A(self):
 
-		self.A = self.A | self.A
+		self.A = (self.A | self.A) & 0xFF
 
 		# Z - Set if result is 0
 		if self.A == 0:

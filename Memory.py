@@ -36,7 +36,7 @@ class Memory:
 			0x3e, 0x01, 0xe0, 0x50
 		]
 
-		self.bytes = bytearray(0xFFFF)
+		self.bytes = bytearray(0xFFFF+1)
 
 		file = open(rom_file, 'rb')
 		rom_bytes = bytearray(file.read())
